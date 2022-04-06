@@ -20,17 +20,17 @@ namespace meteordetector {
 class ResultData {
 public:
   /*!
-   * @brief 本クラスを共有するポインタ
+   * @brief 共享此类的指针
    */
   typedef Poco::SharedPtr<ResultData> Ptr;
 
   /*!
-   * @brief 解析結果のリスト
+   * @brief 分析结果一览
    */
   typedef std::list<ResultData::Ptr> List;
 
   /*!
-   * @brief コンストラクタ
+   * @brief 构造函数
    */
   ResultData();
 
@@ -40,11 +40,11 @@ public:
   virtual ~ResultData();
 
 public:
-  Poco::Int64 frame_no_;    //!< フレーム番号
-  double      frame_msec_;  //!< フレームミリ秒
-  int         mark_;        //!< マーク(0なら対象外)
-  double      result_[10];  //!< 検出情報(実数)
-  std::string message_;     //!< 検出情報(文字列)
+  Poco::Int64 frame_no_;    //!< 帧数
+  double      frame_msec_;  //!< 帧毫秒
+  int         mark_;        //!< 标记（0 不适用）
+  double      result_[10];  //!< 检测信息（实数）
+  std::string message_;     //!< 检测信息（字符串）
 };
 
 ////////////////////////////////////////////////////////////////////////////////

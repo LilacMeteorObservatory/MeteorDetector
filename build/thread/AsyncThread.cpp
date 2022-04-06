@@ -25,9 +25,9 @@ AsyncThread::~AsyncThread() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void AsyncThread::run() {
-  // フレームを解析する.
+  // 分析框架.
   while (!ShutdownHelper::GetInstance().IsShutdown()) {
-    // 今回解析するフレームを取得する.
+    // 获取本次要分析的帧.
     ImageHolder::Vector frame;
     if (!loader_->GetFrame(frame, detector_->RequiredFrameCount())) {
       break;
@@ -38,7 +38,7 @@ void AsyncThread::run() {
     result.frame_msec_ = frame[0]->frame_msec_;
 
     if (detector_->Run(frame, result)) {
-      // データベースに書き込む.
+      // 写入数据库(CSV).
       exporter_->Run(result);
     }
   }

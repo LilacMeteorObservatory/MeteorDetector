@@ -38,7 +38,7 @@ bool MeteorDetector::Run() {
     return false;
   }
 
-  // 解析の完了を待つ.
+  // 等待分析完成.
   queue_.waitDequeueNotification();
 
   UnInitialize();
@@ -74,7 +74,7 @@ bool MeteorDetector::Initialize() {
 
     exporter_ = new Exporter(Property::GetInstance().GetDefaultExporter(video_loader_->GetName()));
 
-    // 生成するスレッド数を取得する.
+    // 获取要生成的线程数.
     int count = detector_->RequiredMaxThread();
     if (count == 0) {
       count = Property::GetInstance().GetMaxDetectorThread();
