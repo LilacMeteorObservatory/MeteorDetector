@@ -52,7 +52,9 @@ bool MeteorDetector::Run() {
   std::string ets = Poco::format("%04d/%02d/%02dT%02d:%02d:%02d", et.year(), et.month(), et.day(), et.hour(), et.minute(), et.second());
   std::cout << Poco::format("Start: %s", sts) << std::endl;
   std::cout << Poco::format("End  : %s", ets) << std::endl;
-  std::cout << Poco::format("Diff : %Ld", Poco::Dynamic::Var(et - st).convert<Poco::Int64>()) << std::endl;
+
+  // Bad cast exception: Can not convert to Int64. Ignore!
+  // std::cout << Poco::format("Diff : %Ld", Poco::Dynamic::Var(et - st).convert<Poco::Int64>()) << std::endl;
   return true;
 }
 

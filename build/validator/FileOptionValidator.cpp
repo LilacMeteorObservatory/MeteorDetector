@@ -20,8 +20,10 @@ FileOptionValidator::~FileOptionValidator() {
 ////////////////////////////////////////////////////////////////////////////////
 void FileOptionValidator::validate(const Poco::Util::Option& option, const std::string& value) {
   std::string message;
-  if (value.find("rtsp") == 0)
-      return;
+  if (value.find("rtsp") == 0) {
+      message = "rtsp URL detected!";
+	  return;
+  }
   try {
     Poco::File file(value);
     if (file.exists() && file.isFile()) {

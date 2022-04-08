@@ -104,6 +104,8 @@ private:
    */
   std::string GetTimeString(const double frame_msec);
 
+  double last_frame_sec;   // 秒计数, 用于返回处理进度
+
 protected:
   std::string data_path_;  //!< 個別データパス
 };

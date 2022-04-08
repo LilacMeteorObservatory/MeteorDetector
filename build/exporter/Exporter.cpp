@@ -47,6 +47,8 @@ bool Exporter::Run(const ResultData& result) {
     body,
     result.message_);
   *stream_ << text << std::endl;
+  // Print result to console.
+  std::cout << "meteor: " << text << std::endl;
   return true;
 }
 

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: MIT
  */
+#include <cmath>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>  // videoio
 #include <opencv2/highgui.hpp>  // highgui
@@ -14,6 +15,7 @@ namespace meteordetector {
 
 ////////////////////////////////////////////////////////////////////////////////
 HoughLinespDetector::HoughLinespDetector() {
+    last_frame_sec = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +74,13 @@ bool HoughLinespDetector::Run(ImageHolder::Vector& frame, ResultData& result) {
     result.result_[0] = linesp.size();
     result.result_[1] = sqrt(pow(fabs(pt[0] - pt[2]), 2) + pow(fabs(pt[1] - pt[3]), 2));
     result.message_ = msg;
+  }
+
+  // print process pre sec.
+  int current_frame_sec = trunc(frame[0]->frame_msec_ / 1000);
+  if (current_frame_sec != last_frame_sec) {
+      last_frame_sec = current_frame_sec;
+      std::cout << "Processing: " << frame[0]->frame_msec_ << std::endl;
   }
 
 #ifdef _DEBUG

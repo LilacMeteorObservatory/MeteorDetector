@@ -54,9 +54,23 @@ void SizeNormalizer::Run(ImageHolder::Ptr frame) {
       cv::Point(masking_[i + 2], masking_[i + 3]),
       cv::Scalar(0, 0, 0), -1);
   }
+#ifdef _DEBUG
+  // mask
+  //画多边形并填充
+  cv::Point points[1][20];
+  points[0][0] = cv::Point(100, 100) + cv::Point(200, 0);
+  points[0][1] = cv::Point(200, 100) + cv::Point(200, 0);
+  points[0][2] = cv::Point(250, 200) + cv::Point(200, 0);
+  points[0][3] = cv::Point(50, 200) + cv::Point(200, 0);
+  const cv::Point* pt[1] = { points[0] };
+  int npt[1] = { 4 };
+  cv::fillPoly(frame->frame_, pt, npt, 1, cv::Scalar(0, 0, 0), 8);
+  cv::imshow("Mask to Image", frame->frame_);
+  cv::waitKey(1);
+#endif
 
   if (gray_) {
-    cv::cvtColor(frame->frame_, frame->frame_, cv::COLOR_RGB2GRAY);
+	  cv::cvtColor(frame->frame_, frame->frame_, cv::COLOR_RGB2GRAY);
   }
 }
 
