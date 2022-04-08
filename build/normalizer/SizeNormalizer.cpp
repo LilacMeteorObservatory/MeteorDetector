@@ -11,6 +11,8 @@
 #include "Poco/Dynamic/Var.h"
 #include "normalizer/SizeNormalizer.h"
 #include "Property.h"
+#include "GlobalConfig.h"
+
 
 namespace uzanka {
 namespace meteordetector {
@@ -19,7 +21,8 @@ namespace meteordetector {
 SizeNormalizer::SizeNormalizer()
   : width_(0),
     height_(0),
-    gray_(false) {
+    gray_(false),
+    is_genrate_mask(false){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +41,6 @@ std::string SizeNormalizer::Name() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void SizeNormalizer::Run(ImageHolder::Ptr frame) {
-  // リサイズする.
   if ((frame->src_width_ != width_) || (frame->src_height_ != height_)) {
     cv::resize(frame->original_, frame->frame_, cv::Size(), ((double)width_ / frame->src_width_), ((double)height_ / frame->src_height_));
     frame->width_ = frame->frame_.cols;
@@ -54,20 +56,20 @@ void SizeNormalizer::Run(ImageHolder::Ptr frame) {
       cv::Point(masking_[i + 2], masking_[i + 3]),
       cv::Scalar(0, 0, 0), -1);
   }
-#ifdef _DEBUG
-  // mask
-  //画多边形并填充
-  cv::Point points[1][20];
-  points[0][0] = cv::Point(100, 100) + cv::Point(200, 0);
-  points[0][1] = cv::Point(200, 100) + cv::Point(200, 0);
-  points[0][2] = cv::Point(250, 200) + cv::Point(200, 0);
-  points[0][3] = cv::Point(50, 200) + cv::Point(200, 0);
-  const cv::Point* pt[1] = { points[0] };
-  int npt[1] = { 4 };
-  cv::fillPoly(frame->frame_, pt, npt, 1, cv::Scalar(0, 0, 0), 8);
-  cv::imshow("Mask to Image", frame->frame_);
-  cv::waitKey(1);
+
+
+  if (is_genrate_mask) {
+      // enable mask
+      cv::Mat and_;
+	  cv::bitwise_and(frame->frame_, frame->frame_, and_, custom_mask);
+      frame->frame_ = and_;
+#if _DEBUG
+	  // std::cout << frame->frame_.size() << " " << custom_mask.size() << std::endl;
+	  cv::imshow("Mask to Image", frame->frame_);
+	  cv::waitKey(1);
 #endif
+      
+  }
 
   if (gray_) {
 	  cv::cvtColor(frame->frame_, frame->frame_, cv::COLOR_RGB2GRAY);
@@ -96,6 +98,29 @@ void SizeNormalizer::GetProperty(const std::string& name, const int width, const
     std::cout << Poco::format("Failed to get property. (exc=%s)", exc.displayText()) << std::endl;
     masking_.clear();
   }
+}
+
+void SizeNormalizer::CreateMask() {
+    if (width_ == 0) {
+        std::cout << "ERROR call SizeNormalizer::CreateMask after SizeNormalizer::GetProperty!" << std::endl;
+        return;
+    }
+    if (mask_path.length() == 0) {
+        return;
+    }
+    custom_mask = cv::imread(mask_path);
+    cv::resize(custom_mask, custom_mask, cv::Size(), ((double)width_ / custom_mask.size().width), ((double)height_ / custom_mask.size().height));
+    // 转灰度
+    cv::cvtColor(custom_mask, custom_mask, cv::COLOR_RGB2GRAY);
+    // 二值化mask
+    cv::threshold(custom_mask, custom_mask, 250, 255, cv::THRESH_BINARY);
+    is_genrate_mask = true;
+#if _DEBUG
+    std::cout << custom_mask.size().width << " " << custom_mask.size().height << std::endl;
+    cv::namedWindow("show mask", cv::WINDOW_NORMAL);
+	cv::imshow("show mask", custom_mask);
+	cv::waitKey(-1);
+#endif
 }
 
 }}  // uzanka::meteordetector

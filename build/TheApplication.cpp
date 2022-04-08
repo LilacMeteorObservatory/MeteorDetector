@@ -13,6 +13,8 @@
 #include "validator/DetectorOptionValidator.h"
 #include "Property.h"
 
+std::string mask_path;
+
 POCO_APP_MAIN(uzanka::meteordetector::TheApplication)
 
 namespace uzanka {
@@ -106,6 +108,13 @@ void TheApplication::defineOptions(Poco::Util::OptionSet& options) {
       .required(false)
       .repeatable(false)
       .validator(new DetectorOptionValidator));
+
+  options.addOption(
+	  Poco::Util::Option("mask", "m", "mask image path.")
+	  .argument("<video_path>", true)
+	  .required(false)
+	  .repeatable(false)
+	  .validator(new FileOptionValidator));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +142,8 @@ void TheApplication::handleOption(const std::string& name, const std::string& va
     normalizer_name_ = value;
   } else if (name == "detector") {
     detector_name_ = value;
+  } else if (name == "mask") {
+      mask_path = value;
   }
 }
 

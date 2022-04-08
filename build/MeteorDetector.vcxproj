@@ -97,6 +97,7 @@
     <Link>
       <AdditionalLibraryDirectories>..\..\poco\lib64;..\..\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PocoFoundationd.lib;PocoDatad.lib;PocoDataODBCd.lib;PocoUtild.lib;opencv_world454d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,6 +154,7 @@
     <ClInclude Include="validator\NormalizerOptionValidator.h" />
     <ClInclude Include="video\ImageHolder.h" />
     <ClInclude Include="video\VideoLoader.h" />
+    <ClInclude Include="GlobalConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeteorDetector.rc" />

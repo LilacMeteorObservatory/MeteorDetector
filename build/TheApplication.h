@@ -9,6 +9,7 @@
 #include "Poco/Util/Option.h"
 #include "Poco/Util/OptionSet.h"
 #include "Define.h"
+#include "GlobalConfig.h"
 
 namespace uzanka {
 namespace meteordetector {

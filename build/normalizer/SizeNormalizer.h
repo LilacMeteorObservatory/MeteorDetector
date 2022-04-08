@@ -66,12 +66,15 @@ protected:
    * カンマで区切られた数字を4ポイント毎にrectangle情報と考えてメンバ変数に格納する.
    */
   void GetProperty(const std::string& name, const int width, const int heigth);
+  void CreateMask();
 
 protected:
-  int              width_;    //!< 正規化する幅
-  int              height_;   //!< 正規化する高さ
-  bool             gray_;     //!< 白黒画像にする
-  std::vector<int> masking_;  //!< マスキング情報(4ポイント毎にrectangleを表す)
+  int              width_;    //!< 标准化宽度
+  int              height_;   //!< 标准化高度
+  bool             gray_;     //!< 制作黑白图像
+  std::vector<int> masking_;  //!< mask 信息（每 4 个点代表一个矩形）
+  cv::Mat custom_mask;        //!< 用户自定义png mask
+  bool is_genrate_mask;       // 由于读入第一帧视频之后才知道视频的尺寸，因此要在运行时更改mask的尺寸。该变量标记是否生成了mask
 };
 
 }}  // uzanka::meteordetector
