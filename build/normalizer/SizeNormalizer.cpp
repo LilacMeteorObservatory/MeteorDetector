@@ -108,12 +108,15 @@ void SizeNormalizer::CreateMask() {
     if (mask_path.length() == 0) {
         return;
     }
-    custom_mask = cv::imread(mask_path);
+    custom_mask = cv::imread(mask_path, cv::IMREAD_UNCHANGED);
+    cv::Mat rgba[4];
+    cv::split(custom_mask, rgba);
+    custom_mask = rgba[3]; // read alpha channel.
+
     cv::resize(custom_mask, custom_mask, cv::Size(), ((double)width_ / custom_mask.size().width), ((double)height_ / custom_mask.size().height));
-    // 转灰度
-    cv::cvtColor(custom_mask, custom_mask, cv::COLOR_RGB2GRAY);
     // 二值化mask
-    cv::threshold(custom_mask, custom_mask, 250, 255, cv::THRESH_BINARY);
+    cv::threshold(custom_mask, custom_mask, 254, 255, cv::THRESH_BINARY);
+    cv::bitwise_not(custom_mask, custom_mask);
     is_genrate_mask = true;
 #if _DEBUG
     std::cout << custom_mask.size().width << " " << custom_mask.size().height << std::endl;
